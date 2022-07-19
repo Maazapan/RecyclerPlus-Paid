@@ -4,8 +4,6 @@ import io.github.maazapan.recyclerplus.Recycler;
 import io.github.maazapan.recyclerplus.commands.RecyclerCMD;
 import io.github.maazapan.recyclerplus.hooks.HookManager;
 import io.github.maazapan.recyclerplus.listener.PlayerListener;
-import io.github.maazapan.recyclerplus.hooks.bstats.Metrics;
-import io.github.maazapan.recyclerplus.hooks.update.UpdateChecker;
 
 public class LoaderManager {
 

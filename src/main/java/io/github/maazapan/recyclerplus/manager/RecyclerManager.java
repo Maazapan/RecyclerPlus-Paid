@@ -6,7 +6,6 @@ import io.github.maazapan.recyclerplus.api.RecyclerAPI;
 import io.github.maazapan.recyclerplus.api.event.RecycleItemEvent;
 import io.github.maazapan.recyclerplus.hooks.compatibles.VaultHook;
 import io.github.maazapan.recyclerplus.utils.InventoryUtils;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -14,9 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.KnowledgeBookMeta;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

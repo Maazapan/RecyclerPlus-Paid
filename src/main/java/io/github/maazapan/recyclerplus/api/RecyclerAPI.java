@@ -4,9 +4,9 @@ import io.github.maazapan.recyclerplus.Recycler;
 import io.github.maazapan.recyclerplus.inventory.RecyclerGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
 
 import java.util.Collection;
 
