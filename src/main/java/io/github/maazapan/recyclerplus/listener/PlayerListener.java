@@ -42,7 +42,7 @@ public class PlayerListener implements Listener {
      */
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        if (event.getItemInHand().getType() != Material.AIR) {
+        if (!event.isCancelled() && event.getItemInHand().getType() != Material.AIR) {
             NBTItem nbtItem = new NBTItem(event.getItemInHand());
 
             if (nbtItem.hasKey("recycler-item")) {
@@ -98,8 +98,9 @@ public class PlayerListener implements Listener {
 
         Block block = event.getBlock();
 
-        if (nbtBlock.getData().hasKey("recycler-block")) {
+        if (!event.isCancelled() && nbtBlock.getData().hasKey("recycler-block")) {
             event.setDropItems(false);
+            nbtBlock.getData().removeKey("recycler-block");
             block.getWorld().dropItem(block.getLocation().add(0.5, 0, 0.5), inventoryUtils.getRecyclerItem());
         }
     }
@@ -202,9 +203,11 @@ public class PlayerListener implements Listener {
                     if (event.getClickedInventory() instanceof PlayerInventory) {
                         int recyclerSlot = config.getInt("config.inventory.recycler-slot");
 
-                        event.getInventory().setItem(recyclerSlot, event.getCurrentItem());
-                        event.setCurrentItem(new ItemStack(Material.AIR));
-                        event.setCancelled(true);
+                        if (event.getInventory().getItem(recyclerSlot) == null) {
+                            event.getInventory().setItem(recyclerSlot, event.getCurrentItem());
+                            event.setCurrentItem(new ItemStack(Material.AIR));
+                            event.setCancelled(true);
+                        }
                     }
                 }
 

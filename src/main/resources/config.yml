@@ -114,7 +114,7 @@ config:
     #  you can modify it to your liking, remember that this slot has to be empty to work.
     recycler-slot: 19
 
-    # In these slots the crystals will be placed informing that something happened
+    # In these slots the glass will be placed informing that something happened
     # could be an error at the time of recycling or also that everything has gone well
     # If you want to deactivate this option, put the word "none"
     info-slot: 36,37,38,39,40,41,42,43,44

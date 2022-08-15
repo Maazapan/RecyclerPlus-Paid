@@ -123,6 +123,7 @@ public class RecyclerManager {
              - Insert ingredients at slots and check amount at item-stack.
              */
             event.getIngredients().stream().filter(ingredients -> ingredients != null && ingredients.getType() != Material.AIR).forEach(inventory::addItem);
+
             this.removeItemStack(inventory, itemStack, slot, amount);
             this.successInfo(player, inventory);
 
@@ -138,6 +139,7 @@ public class RecyclerManager {
      */
     public void close(Player player) {
         player.closeInventory();
+
     }
 
     /**
