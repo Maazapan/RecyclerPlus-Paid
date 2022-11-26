@@ -8,15 +8,18 @@ import io.github.maazapan.recyclerplus.hooks.compatibles.VaultHook;
 import io.github.maazapan.recyclerplus.utils.InventoryUtils;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RecyclerManager {
 
@@ -102,6 +105,27 @@ public class RecyclerManager {
             if (event.isCancelled()) {
                 return;
             }
+            // List of all ingredients of itemstack.
+            List<ItemStack> ingredients = event.getIngredients().stream()
+                                                  .filter(ingredient -> ingredient != null && ingredient.getType() != Material.AIR)
+                                                  .collect(Collectors.toList());
+            /*
+             - Check if the itemstack is enchantment and add enchanted book at ingredient list.
+             */
+            if (itemStack.getEnchantments().size() > 0 && config.getBoolean("config.enchanted-craft")) {
+                for (Enchantment enchantment : itemStack.getEnchantments().keySet()) {
+                    int level = itemStack.getEnchantments().get(enchantment);
+
+                    ItemStack enchantedBook = new ItemStack(Material.ENCHANTED_BOOK);
+                    EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) enchantedBook.getItemMeta();
+
+                    if (enchantmentMeta == null) return;
+                    enchantmentMeta.addStoredEnchant(Enchantment.getByKey(enchantment.getKey()), level, false);
+
+                    enchantedBook.setItemMeta(enchantmentMeta);
+                    ingredients.add(enchantedBook);
+                }
+            }
 
             /*
              - Check durability at item.
@@ -119,10 +143,7 @@ public class RecyclerManager {
                 }
             }
 
-            /*
-             - Insert ingredients at slots and check amount at item-stack.
-             */
-            event.getIngredients().stream().filter(ingredients -> ingredients != null && ingredients.getType() != Material.AIR).forEach(inventory::addItem);
+            ingredients.forEach(inventory::addItem);
 
             this.removeItemStack(inventory, itemStack, slot, amount);
             this.successInfo(player, inventory);

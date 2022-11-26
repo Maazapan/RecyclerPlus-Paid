@@ -31,6 +31,9 @@ config:
       - 'UI_STONECUTTER_TAKE_RESULT;1;1'
       - 'BLOCK_LEVER_CLICK;0.8;1'
 
+  # When recycling an enchanted item, it will give you the book with which it was enchanted.
+  enchanted-craft: true
+
   # Send message at player if the recycler is successful.
   success-message: false
   item-durability: true

@@ -9,13 +9,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
-
 import java.util.Collection;
 
 public class RecyclerAPI {
 
     public static Collection<ItemStack> getIngredients(ItemStack recycleItemStack) {
-           ItemStack replaced = new ItemStack(recycleItemStack.getType());
+        ItemStack replaced = new ItemStack(recycleItemStack.getType());
 
         for (Recipe recipes : Bukkit.getRecipesFor(replaced)) {
             if (recipes instanceof ShapedRecipe) {

@@ -95,10 +95,11 @@ public class PlayerListener implements Listener {
     public void onBreakBlock(BlockBreakEvent event) {
         InventoryUtils inventoryUtils = new InventoryUtils(plugin);
         NBTBlock nbtBlock = new NBTBlock(event.getBlock());
+        Player player = event.getPlayer();
 
         Block block = event.getBlock();
 
-        if (!event.isCancelled() && nbtBlock.getData().hasKey("recycler-block")) {
+        if (!event.isCancelled() && nbtBlock.getData().hasKey("recycler-block") && player.getGameMode() != GameMode.CREATIVE) {
             event.setDropItems(false);
             nbtBlock.getData().removeKey("recycler-block");
             block.getWorld().dropItem(block.getLocation().add(0.5, 0, 0.5), inventoryUtils.getRecyclerItem());

@@ -1,6 +1,10 @@
 package io.github.maazapan.recyclerplus;
 
 import io.github.maazapan.recyclerplus.manager.LoaderManager;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Recycler extends JavaPlugin {
@@ -10,7 +14,7 @@ public final class Recycler extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        // Plugin startup logic}
         manager = new LoaderManager(this);
         instance = this;
         manager.load();
@@ -27,7 +31,7 @@ public final class Recycler extends JavaPlugin {
         return instance;
     }
 
-    public String getPrefix(){
+    public String getPrefix() {
         return getConfig().getString("config.prefix");
     }
 }
