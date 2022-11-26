@@ -45,8 +45,8 @@ public class RecyclerManager {
         ItemStack itemStack = inventory.getItem(slot);
 
         if (itemStack != null && itemStack.getType() != Material.AIR &&
-                    RecyclerAPI.getShapedRecipe(itemStack) != null &&
-                    RecyclerAPI.getIngredients(itemStack) != null) {
+                RecyclerAPI.getShapedRecipe(itemStack) != null &&
+                RecyclerAPI.getIngredients(itemStack) != null) {
 
             /*
              - Check material is not blacklisted.
@@ -80,7 +80,7 @@ public class RecyclerManager {
                 if (!VaultHook.getEconomy().has(player, cost)) {
                     player.closeInventory();
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() +
-                                                                                           config.getString("config.messages.no-money").replaceAll("%money%", String.valueOf(cost))));
+                            config.getString("config.messages.no-money").replaceAll("%money%", String.valueOf(cost))));
                     return;
                 }
                 VaultHook.getEconomy().withdrawPlayer(player, cost);
@@ -107,8 +107,8 @@ public class RecyclerManager {
             }
             // List of all ingredients of itemstack.
             List<ItemStack> ingredients = event.getIngredients().stream()
-                                                  .filter(ingredient -> ingredient != null && ingredient.getType() != Material.AIR)
-                                                  .collect(Collectors.toList());
+                    .filter(ingredient -> ingredient != null && ingredient.getType() != Material.AIR)
+                    .collect(Collectors.toList());
             /*
              - Check if the itemstack is enchantment and add enchanted book at ingredient list.
              */
@@ -130,7 +130,7 @@ public class RecyclerManager {
             /*
              - Check durability at item.
              */
-            if (config.getBoolean("config.item-durability.enable")) {
+            if (config.getBoolean("config.item-durability")) {
                 Damageable damageable = (Damageable) itemStack.getItemMeta();
                 Collection<ItemStack> collection = event.getIngredients();
 
@@ -139,7 +139,9 @@ public class RecyclerManager {
                     int percentage = (durability * 100) / itemStack.getType().getMaxDurability();
 
                     collection.removeIf(a -> (int) (Math.random() * 100) > percentage);
-                    event.setIngredients(collection);
+
+                    ingredients.clear();
+                    ingredients.addAll(collection);
                 }
             }
 
