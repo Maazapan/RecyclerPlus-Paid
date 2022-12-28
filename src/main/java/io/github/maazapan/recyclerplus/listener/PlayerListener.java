@@ -103,11 +103,13 @@ public class PlayerListener implements Listener {
         Block block = event.getBlock();
 
         if (nbtBlock.getData().hasTag("recycler-block") && player.getGameMode() != GameMode.CREATIVE) {
-            if (WorldGuardHook.hasWorldGuard() && WorldGuardHook.canBreak(player, block.getLocation())) {
-                event.setDropItems(false);
-                nbtBlock.getData().removeKey("recycler-block");
-                block.getWorld().dropItem(block.getLocation().add(0.5, 0, 0.5), inventoryUtils.getRecyclerItem());
+            if (WorldGuardHook.hasWorldGuard() && !WorldGuardHook.canBreak(player, block.getLocation())) {
+                return;
             }
+
+            event.setDropItems(false);
+            nbtBlock.getData().removeKey("recycler-block");
+            block.getWorld().dropItem(block.getLocation().add(0.5, 0, 0.5), inventoryUtils.getRecyclerItem());
         }
     }
 
