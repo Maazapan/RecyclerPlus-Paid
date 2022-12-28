@@ -281,6 +281,7 @@ public class ItemBuilder {
     public ItemBuilder setModelData(Integer data){
         ItemMeta im = is.getItemMeta();
         im.setCustomModelData(data);
+        is.setItemMeta(im);
         return this;
     }
 

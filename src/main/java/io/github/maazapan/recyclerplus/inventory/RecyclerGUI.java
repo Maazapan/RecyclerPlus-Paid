@@ -9,10 +9,11 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 import java.util.List;
 
-public class RecyclerGUI {
+public class RecyclerGUI implements InventoryHolder {
 
     private final Recycler plugin;
     private Inventory inventory;
@@ -32,7 +33,7 @@ public class RecyclerGUI {
         FileConfiguration config = plugin.getConfig();
 
         try {
-            inventory = Bukkit.createInventory(null, config.getInt("config.inventory.size"), ChatColor.translateAlternateColorCodes('&', config.getString("config.inventory.title")));
+            inventory = Bukkit.createInventory(this, config.getInt("config.inventory.size"), ChatColor.translateAlternateColorCodes('&', config.getString("config.inventory.title")));
 
             for (String path : config.getConfigurationSection("config.inventory.items").getKeys(false)) {
                 ItemBuilder itemBuilder = new ItemBuilder(Material.valueOf(config.getString("config.inventory.items." + path + ".id")));
@@ -87,5 +88,10 @@ public class RecyclerGUI {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return inventory;
     }
 }

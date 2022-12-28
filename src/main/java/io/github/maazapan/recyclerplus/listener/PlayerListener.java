@@ -5,6 +5,7 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.maazapan.recyclerplus.Recycler;
 import io.github.maazapan.recyclerplus.api.event.RecycleItemEvent;
 import io.github.maazapan.recyclerplus.api.event.RecyclerOpenEvent;
+import io.github.maazapan.recyclerplus.hooks.worldguard.WorldGuardHook;
 import io.github.maazapan.recyclerplus.inventory.RecyclerGUI;
 import io.github.maazapan.recyclerplus.manager.RecyclerManager;
 import io.github.maazapan.recyclerplus.utils.InventoryUtils;
@@ -25,7 +26,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PlayerListener implements Listener {
 
@@ -95,14 +98,16 @@ public class PlayerListener implements Listener {
     public void onBreakBlock(BlockBreakEvent event) {
         InventoryUtils inventoryUtils = new InventoryUtils(plugin);
         NBTBlock nbtBlock = new NBTBlock(event.getBlock());
-        Player player = event.getPlayer();
 
+        Player player = event.getPlayer();
         Block block = event.getBlock();
 
-        if (!event.isCancelled() && nbtBlock.getData().hasKey("recycler-block") && player.getGameMode() != GameMode.CREATIVE) {
-            event.setDropItems(false);
-            nbtBlock.getData().removeKey("recycler-block");
-            block.getWorld().dropItem(block.getLocation().add(0.5, 0, 0.5), inventoryUtils.getRecyclerItem());
+        if (nbtBlock.getData().hasTag("recycler-block") && player.getGameMode() != GameMode.CREATIVE) {
+            if (WorldGuardHook.hasWorldGuard() && WorldGuardHook.canBreak(player, block.getLocation())) {
+                event.setDropItems(false);
+                nbtBlock.getData().removeKey("recycler-block");
+                block.getWorld().dropItem(block.getLocation().add(0.5, 0, 0.5), inventoryUtils.getRecyclerItem());
+            }
         }
     }
 
@@ -114,18 +119,18 @@ public class PlayerListener implements Listener {
      */
     @EventHandler
     public void onCloseInventory(InventoryCloseEvent event) {
-        FileConfiguration config = plugin.getConfig();
         Player player = (Player) event.getPlayer();
 
-        if (event.getView().getTitle().equals(ChatColor.translateAlternateColorCodes('&', config.getString("config.inventory.title")))) {
-            for (ItemStack itemStack : event.getInventory().getContents()) {
+        if (event.getInventory().getHolder() instanceof RecyclerGUI) {
+            List<ItemStack> contents = Arrays.stream(event.getInventory().getContents())
+                    .filter(itemStack -> itemStack != null && itemStack.getType() != Material.AIR)
+                    .collect(Collectors.toList());
 
-                if (itemStack != null) {
-                    NBTItem nbtItem = new NBTItem(itemStack);
+            for (ItemStack itemStack : contents) {
+                NBTItem nbtItem = new NBTItem(itemStack);
 
-                    if (!nbtItem.hasCustomNbtData() && itemStack.getType() != Material.AIR) {
-                        player.getInventory().addItem(itemStack);
-                    }
+                if (!nbtItem.hasCustomNbtData()) {
+                    player.getInventory().addItem(itemStack);
                 }
             }
         }
@@ -191,7 +196,7 @@ public class PlayerListener implements Listener {
         RecyclerManager manager = new RecyclerManager(plugin);
 
         if (event.getCurrentItem() != null && event.getClickedInventory() != null) {
-            if (event.getView().getTitle().equals(ChatColor.translateAlternateColorCodes('&', config.getString("config.inventory.title")))) {
+            if (event.getInventory().getHolder() instanceof RecyclerGUI) {
 
                 NBTItem nbtItem = new NBTItem(event.getCurrentItem());
 

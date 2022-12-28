@@ -105,12 +105,14 @@ public class RecyclerManager {
             if (event.isCancelled()) {
                 return;
             }
+
             // List of all ingredients of itemstack.
             List<ItemStack> ingredients = event.getIngredients().stream()
                     .filter(ingredient -> ingredient != null && ingredient.getType() != Material.AIR)
                     .collect(Collectors.toList());
+
             /*
-             - Check if the itemstack is enchantment and add enchanted book at ingredient list.
+             - Check if the items tack is enchantment and add enchanted book at ingredient list.
              */
             if (itemStack.getEnchantments().size() > 0 && config.getBoolean("config.enchanted-craft")) {
                 for (Enchantment enchantment : itemStack.getEnchantments().keySet()) {
@@ -132,16 +134,12 @@ public class RecyclerManager {
              */
             if (config.getBoolean("config.item-durability")) {
                 Damageable damageable = (Damageable) itemStack.getItemMeta();
-                Collection<ItemStack> collection = event.getIngredients();
 
                 if (damageable != null && damageable.getDamage() > 0) {
                     int durability = itemStack.getType().getMaxDurability() - damageable.getDamage();
                     int percentage = (durability * 100) / itemStack.getType().getMaxDurability();
 
-                    collection.removeIf(a -> (int) (Math.random() * 100) > percentage);
-
-                    ingredients.clear();
-                    ingredients.addAll(collection);
+                    ingredients.removeIf(a -> (int) (Math.random() * 100) > percentage);
                 }
             }
 
