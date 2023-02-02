@@ -6,6 +6,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 public class RecycleItemEvent extends Event implements Cancellable {
@@ -16,12 +17,15 @@ public class RecycleItemEvent extends Event implements Cancellable {
     private Collection<ItemStack> ingredients;
 
     private boolean cancel;
+    private boolean customRecipe;
+
     private static final HandlerList handlerList = new HandlerList();
 
-    public RecycleItemEvent(Player player, ItemStack itemStack, Collection<ItemStack> ingredients) {
+    public RecycleItemEvent(Player player, ItemStack itemStack, @Nullable Collection<ItemStack> ingredients) {
         this.player = player;
         this.ingredients = ingredients;
         this.itemStack = itemStack;
+        this.customRecipe = false;
         this.cancel = false;
     }
 
@@ -49,6 +53,14 @@ public class RecycleItemEvent extends Event implements Cancellable {
     @Override
     public void setCancelled(boolean cancel) {
         this.cancel = cancel;
+    }
+
+    public boolean isCustomRecipe() {
+        return customRecipe;
+    }
+
+    public void setCustomRecipe(boolean customRecipe) {
+        this.customRecipe = customRecipe;
     }
 
     public static HandlerList getHandlerList() {

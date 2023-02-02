@@ -44,9 +44,24 @@ public class RecyclerManager {
         int slot = config.getInt("config.inventory.recycler-slot");
         ItemStack itemStack = inventory.getItem(slot);
 
-        if (itemStack != null && itemStack.getType() != Material.AIR &&
-                RecyclerAPI.getShapedRecipe(itemStack) != null &&
-                RecyclerAPI.getIngredients(itemStack) != null) {
+        if (itemStack != null && itemStack.getType() != Material.AIR) {
+            /*
+            - This is call custom event RecycleItemEvent
+            */
+            RecycleItemEvent event = new RecycleItemEvent(player, itemStack, RecyclerAPI.getIngredients(itemStack));
+            Bukkit.getPluginManager().callEvent(event);
+
+            if (event.isCancelled()) {
+                this.errorInfo(player, inventory);
+                return;
+            }
+
+            if (!event.isCustomRecipe()) {
+                if (RecyclerAPI.getShapedRecipe(itemStack) == null && RecyclerAPI.getIngredients(itemStack) == null) {
+                    this.errorInfo(player, inventory);
+                    return;
+                }
+            }
 
             /*
              - Check material is not blacklisted.
@@ -60,7 +75,7 @@ public class RecyclerManager {
             /*
              - Check item-stack is correct amount at recipe amount
              */
-            int amount = RecyclerAPI.getShapedRecipe(itemStack).getResult().getAmount();
+            int amount = event.isCustomRecipe() ? 1 : RecyclerAPI.getShapedRecipe(itemStack).getResult().getAmount();
 
             if (itemStack.getAmount() < amount) {
                 this.errorInfo(player, inventory);
@@ -94,16 +109,6 @@ public class RecyclerManager {
                     this.removeItemStack(inventory, itemStack, slot, amount);
                     return;
                 }
-            }
-
-            /*
-             - This is call custom event RecycleItemEvent
-             */
-            RecycleItemEvent event = new RecycleItemEvent(player, itemStack, RecyclerAPI.getIngredients(itemStack));
-            Bukkit.getPluginManager().callEvent(event);
-
-            if (event.isCancelled()) {
-                return;
             }
 
             // List of all ingredients of itemstack.
@@ -257,22 +262,21 @@ public class RecyclerManager {
         Collection<ItemStack> itemStacks = new ArrayList<>();
         FileConfiguration config = plugin.getConfig();
 
-        for (String path : config.getConfigurationSection("config.change-result.materials").getKeys(false)) {
-            if (itemStack.getType() == Material.valueOf(config.getString("config.change-result.materials." + path + ".id"))) {
-                config.getStringList("config.change-result.materials." + path + ".result").forEach(s -> {
+        for (String key : config.getConfigurationSection("config.change-result.materials").getKeys(false)) {
+            Material material = Material.valueOf(config.getString("config.change-result.materials." + key + ".id"));
 
-                    String[] split = s.split(";");
-                    ItemStack result = new ItemStack(Material.valueOf(split[0]));
+            if (itemStack.getType() != material) continue;
+            for (String s : config.getStringList("config.change-result.materials." + key + ".result")) {
+                String[] split = s.split(";");
+                ItemStack result = new ItemStack(Material.valueOf(split[0]));
 
-                    if (split.length > 1) {
-                        result.setAmount(Integer.parseInt(split[1]));
-                    }
-                    itemStacks.add(result);
-                });
-                return itemStacks;
+                if (split.length > 1) {
+                    result.setAmount(Integer.parseInt(split[1]));
+                }
+                itemStacks.add(result);
             }
         }
-        return null;
+        return itemStacks.isEmpty() ? null : itemStacks;
     }
 
     /**

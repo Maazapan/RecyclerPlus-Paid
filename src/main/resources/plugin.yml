@@ -1,5 +1,5 @@
 name: RecyclerPlus
-version: 1.1.7
+version: '${project.version}'
 main: io.github.maazapan.recyclerplus.Recycler
 api-version: +1.16
 softdepend:

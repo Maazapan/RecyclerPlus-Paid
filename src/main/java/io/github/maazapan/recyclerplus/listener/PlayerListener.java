@@ -181,6 +181,7 @@ public class PlayerListener implements Listener {
 
         if (!event.isCancelled() && config.getBoolean("config.change-result.enable")) {
             if (manager.changeResult(event.getItemStack()) != null) {
+                event.setCustomRecipe(true);
                 event.setIngredients(manager.changeResult(event.getItemStack()));
             }
         }
