@@ -1,4 +1,4 @@
-package io.github.maazapan.recyclerplus.inventory;
+package io.github.maazapan.recyclerplus.recycler.gui;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.maazapan.recyclerplus.Recycler;

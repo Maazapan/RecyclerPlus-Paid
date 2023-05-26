@@ -15,7 +15,6 @@ public final class Recycler extends JavaPlugin {
 
     private LoaderManager manager;
     private static Recycler instance;
-
     @Override
     public void onEnable() {
         // Plugin startup logic}
@@ -28,6 +27,10 @@ public final class Recycler extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         manager.disable();
+    }
+
+    public LoaderManager getManager() {
+        return manager;
     }
 
     // Only use for api.

@@ -3,11 +3,10 @@ package io.github.maazapan.recyclerplus.listener;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.maazapan.recyclerplus.Recycler;
-import io.github.maazapan.recyclerplus.api.event.RecycleItemEvent;
-import io.github.maazapan.recyclerplus.api.event.RecyclerOpenEvent;
+import io.github.maazapan.recyclerplus.recycler.api.event.RecyclerOpenEvent;
 import io.github.maazapan.recyclerplus.hooks.worldguard.WorldGuardHook;
-import io.github.maazapan.recyclerplus.inventory.RecyclerGUI;
-import io.github.maazapan.recyclerplus.manager.RecyclerManager;
+import io.github.maazapan.recyclerplus.recycler.gui.RecyclerGUI;
+import io.github.maazapan.recyclerplus.recycler.manager.RecyclerManager;
 import io.github.maazapan.recyclerplus.utils.InventoryUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -168,24 +167,6 @@ public class PlayerListener implements Listener {
         }
     }
 
-    /**
-     * Check player is recycler item and check config if the item
-     * is on config path change item.
-     *
-     * @param event RecycleItemEvent
-     */
-    @EventHandler
-    public void onRecycleItem(RecycleItemEvent event) {
-        RecyclerManager manager = new RecyclerManager(plugin);
-        FileConfiguration config = plugin.getConfig();
-
-        if (!event.isCancelled() && config.getBoolean("config.change-result.enable")) {
-            if (manager.changeResult(event.getItemStack()) != null) {
-                event.setCustomRecipe(true);
-                event.setIngredients(manager.changeResult(event.getItemStack()));
-            }
-        }
-    }
 
     /**
      * Check player is clicking on the recycler inventory.

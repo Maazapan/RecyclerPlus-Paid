@@ -1,8 +1,8 @@
-package io.github.maazapan.recyclerplus.api;
+package io.github.maazapan.recyclerplus.recycler.api;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.maazapan.recyclerplus.Recycler;
-import io.github.maazapan.recyclerplus.inventory.RecyclerGUI;
+import io.github.maazapan.recyclerplus.recycler.gui.RecyclerGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

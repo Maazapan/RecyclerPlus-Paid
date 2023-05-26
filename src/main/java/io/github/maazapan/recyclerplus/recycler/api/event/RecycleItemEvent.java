@@ -1,4 +1,4 @@
-package io.github.maazapan.recyclerplus.api.event;
+package io.github.maazapan.recyclerplus.recycler.api.event;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;

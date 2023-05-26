@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -37,6 +38,10 @@ public class ItemBuilder {
      */
     public ItemBuilder(Material m) {
         this(m, 1);
+    }
+
+    public ItemBuilder(){
+
     }
 
     /**
@@ -311,6 +316,38 @@ public class ItemBuilder {
             im.setColor(color);
             is.setItemMeta(im);
         } catch (ClassCastException expected) {
+        }
+        return this;
+    }
+
+    public ItemBuilder fromConfig(FileConfiguration config, String path) {
+        is = new ItemStack(Material.valueOf(config.getString(path + ".id")));
+
+        if (config.contains(path + ".skull")) {
+            this.setSkullBase64(config.getString(path + ".texture"));
+        }
+
+        if (config.contains(path + ".display_name")) {
+            this.setName(config.getString(path + ".display_name"));
+        }
+
+        if (config.contains(path + ".lore")) {
+            this.setLore(config.getStringList(path + ".lore"));
+        }
+
+        if (config.contains(path + ".enchantments")) {
+            for (String enchant : config.getStringList(path + ".enchantments")) {
+                String[] split = enchant.split(":");
+                this.addEnchant(Enchantment.getByName(split[0]), Integer.parseInt(split[1]));
+            }
+        }
+
+        if (config.contains(path + ".durability")) {
+            this.setDurability((short) config.getInt(path + ".durability"));
+        }
+
+        if (config.contains(path + ".model_data")) {
+            this.setModelData(config.getInt(path + ".model_data"));
         }
         return this;
     }

@@ -1,9 +1,9 @@
-package io.github.maazapan.recyclerplus.manager;
+package io.github.maazapan.recyclerplus.recycler.manager;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.maazapan.recyclerplus.Recycler;
-import io.github.maazapan.recyclerplus.api.RecyclerAPI;
-import io.github.maazapan.recyclerplus.api.event.RecycleItemEvent;
+import io.github.maazapan.recyclerplus.recycler.api.RecyclerAPI;
+import io.github.maazapan.recyclerplus.recycler.api.event.RecycleItemEvent;
 import io.github.maazapan.recyclerplus.hooks.compatibles.VaultHook;
 import io.github.maazapan.recyclerplus.utils.InventoryUtils;
 import org.bukkit.*;
