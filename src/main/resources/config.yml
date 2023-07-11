@@ -34,7 +34,7 @@ config:
   # When recycling an enchanted item, it will give you the book with which it was enchanted.
   enchanted-craft: true
 
-  # Send message at player if the recycler is successful.
+  # Send a message at player if the recycler is successful.
   success-message: false
   item-durability: true
 
@@ -44,13 +44,13 @@ config:
       enable: false
       cost: 100
 
-  # If option is enable check player has permission
-  # and open recycler menu.
+  # If an option is enabled, check player has permission
+  # and open the recycler menu.
   open-recycler-permission:
     enable: false
     permission: "recyclerplus.use"
 
-  # Fail when you are recycling the player will lose the item they are trying to recycle
+  # Fail, when you are recycling, the player will lose the item they are trying to recycle.
   # you can set the percentage you want this to happen, also disable and enable it.
   fail-recycler:
     enable: false
@@ -62,13 +62,30 @@ config:
     enable: false
     materials:
       '1':
-        id: DIAMOND_CHESTPLATE
+        id: custom_item:fired_sword
+        permission: "recyclerplus.change.1"
         result:
-          - 'DIAMOND;1'
-          - 'TNT;20'
-          - "IRON_INGOT;10"
-  #
-  #
+          - '[CONSOLE] say just recycled a diamond sword'
+          - '[PLAYER] gamemode creative'
+          - '[ITEM] EMERALD:10'
+          - '[ITEM] GRASS_BLOCK:5'
+      '2':
+        id: material:NETHER_STAR
+        result:
+          - '[CUSTOM_ITEM] custom_skull'
+          - '[CUSTOM_ITEM] fired_sword'
+          - '[ITEM] DIAMOND:10'
+      '3':
+        id: custom_item:custom_skull
+        result:
+          - '[CONSOLE] title %player% title "§aChange result"'
+          - '[CONSOLE] title %player% subtitle "§eCommand executed!"'
+          - '[ITEM] IRON_INGOT:2'
+
+  # You can create custom items with this option, you can add as many as you want.
+  # Make sure to follow the format of the list to avoid any errors,
+  # You can find all available materials on this page.
+  # Docs: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
   custom-items:
     'fired_sword':
       id: DIAMOND_SWORD
@@ -76,8 +93,8 @@ config:
       lore:
         - '&7This sword is very powerful'
       enchantments:
-        - 'DAMAGE_ALL;5'
-        - 'FIRE_ASPECT;2'
+        - 'DAMAGE_ALL:5'
+        - 'FIRE_ASPECT:2'
     'custom_skull':
       id: PLAYER_HEAD
       texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDZjNDdkNTg0NDgyMjRhZGIzM2JmMzI4YzIwMzUxZTQ0Yjk3MGMwYTdiZTQ4NWFiNjA0NGJkZjIxYzBkMDZhMCJ9fX0="
@@ -92,7 +109,7 @@ config:
   # Make it possible to craft the recycler block only by activating this option.
   crafting-recipe:
     enable: true
-    # By activating this option you need a permission when crafting a mailbox.
+    # By activating this option, you need a permission when crafting a mailbox.
     recycler-permission:
       enable: true
       permission: "recyclerplus.craft"
@@ -138,9 +155,9 @@ config:
     #  you can modify it to your liking, remember that this slot has to be empty to work.
     recycler-slot: 19
 
-    # In these slots the glass will be placed informing that something happened
+    # In these slots, the glass will be placed informing that something happened
     # could be an error at the time of recycling or also that everything has gone well
-    # If you want to deactivate this option, put the word "none"
+    # If you want to deactivate this option, put the word "none."
     info-slot: 36,37,38,39,40,41,42,43,44
 
     # Tou can add any item to the menu by simply following the list to avoid any errors.

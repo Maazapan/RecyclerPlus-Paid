@@ -3,10 +3,13 @@ package io.github.maazapan.recyclerplus.listener;
 import io.github.maazapan.recyclerplus.Recycler;
 import io.github.maazapan.recyclerplus.recycler.api.event.RecycleItemEvent;
 import io.github.maazapan.recyclerplus.recycler.manager.RecyclerManager;
+import io.github.maazapan.recyclerplus.recycler.manager.ResultManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class RecyclerListener implements Listener {
 
@@ -24,17 +27,20 @@ public class RecyclerListener implements Listener {
      */
     @EventHandler
     public void onRecyclerItem(RecycleItemEvent event) {
-        RecyclerManager manager = new RecyclerManager(plugin);
         FileConfiguration config = plugin.getConfig();
 
         if (!event.isCancelled() && config.getBoolean("config.change-result.enable")) {
-            ItemStack recycleItem = event.getItemStack();
+            ResultManager resultManager = new ResultManager(plugin);
+            ItemStack itemStack = event.getItemStack();
 
-            if (manager.changeResult(event.getItemStack()) != null) {
 
+            if (resultManager.haveCustomResult(itemStack)) {
+                List<ItemStack> ingredients = resultManager.getItemResult(itemStack);
 
-                event.setCustomRecipe(true);
-                event.setIngredients(manager.changeResult(event.getItemStack()));
+                if (ingredients != null && !ingredients.isEmpty()) {
+                    event.setCustomRecipe(true);
+                    event.setIngredients(ingredients);
+                }
             }
         }
     }

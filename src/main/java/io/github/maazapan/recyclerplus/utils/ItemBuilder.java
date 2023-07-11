@@ -116,6 +116,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder setAmount(int amount){
+        is.setAmount(amount);
+        return this;
+    }
+
     /**
      * Remove a certain enchant from the item.
      *
@@ -323,7 +328,7 @@ public class ItemBuilder {
     public ItemBuilder fromConfig(FileConfiguration config, String path) {
         is = new ItemStack(Material.valueOf(config.getString(path + ".id")));
 
-        if (config.contains(path + ".skull")) {
+        if (config.contains(path + ".texture")) {
             this.setSkullBase64(config.getString(path + ".texture"));
         }
 

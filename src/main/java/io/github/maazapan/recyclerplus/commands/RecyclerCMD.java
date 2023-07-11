@@ -178,7 +178,7 @@ public class RecyclerCMD implements CommandExecutor, TabCompleter {
 
             List<String> items = new ArrayList<>(customItems.getCustomItems().keySet());
 
-            if (args.length > 0) {
+            if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("menu")) {
                     return players;
                 }

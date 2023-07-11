@@ -2,9 +2,9 @@ package io.github.maazapan.recyclerplus.recycler.manager;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.maazapan.recyclerplus.Recycler;
+import io.github.maazapan.recyclerplus.hooks.compatibles.VaultHook;
 import io.github.maazapan.recyclerplus.recycler.api.RecyclerAPI;
 import io.github.maazapan.recyclerplus.recycler.api.event.RecycleItemEvent;
-import io.github.maazapan.recyclerplus.hooks.compatibles.VaultHook;
 import io.github.maazapan.recyclerplus.utils.InventoryUtils;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,8 +16,6 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +37,7 @@ public class RecyclerManager {
      */
 
     public void accept(Player player, Inventory inventory) {
+        ResultManager resultManager = new ResultManager(plugin);
         FileConfiguration config = plugin.getConfig();
 
         int slot = config.getInt("config.inventory.recycler-slot");
@@ -119,7 +118,8 @@ public class RecyclerManager {
             /*
              - Check if the items tack is enchantment and add enchanted book at ingredient list.
              */
-            if (itemStack.getEnchantments().size() > 0 && config.getBoolean("config.enchanted-craft")) {
+
+            if (!event.isCustomRecipe() && itemStack.getEnchantments().size() > 0 && config.getBoolean("config.enchanted-craft")) {
                 for (Enchantment enchantment : itemStack.getEnchantments().keySet()) {
                     int level = itemStack.getEnchantments().get(enchantment);
 
@@ -140,7 +140,7 @@ public class RecyclerManager {
             if (config.getBoolean("config.item-durability")) {
                 Damageable damageable = (Damageable) itemStack.getItemMeta();
 
-                if (damageable != null && damageable.getDamage() > 0) {
+                if (damageable != null && itemStack.getType().getMaxDurability() > 0 && damageable.getDamage() > 0) {
                     int durability = itemStack.getType().getMaxDurability() - damageable.getDamage();
                     int percentage = (durability * 100) / itemStack.getType().getMaxDurability();
 
@@ -149,6 +149,7 @@ public class RecyclerManager {
             }
 
             ingredients.forEach(inventory::addItem);
+            resultManager.executeCommandResult(player, itemStack); // Execute command result.
 
             this.removeItemStack(inventory, itemStack, slot, amount);
             this.successInfo(player, inventory);
@@ -253,31 +254,6 @@ public class RecyclerManager {
         }
     }
 
-    /**
-     * Change result at item-stack recycler.
-     *
-     * @param itemStack ItemStack
-     */
-    public Collection<ItemStack> changeResult(ItemStack itemStack) {
-        Collection<ItemStack> itemStacks = new ArrayList<>();
-        FileConfiguration config = plugin.getConfig();
-
-        for (String key : config.getConfigurationSection("config.change-result.materials").getKeys(false)) {
-            Material material = Material.valueOf(config.getString("config.change-result.materials." + key + ".id"));
-
-            if (itemStack.getType() != material) continue;
-            for (String s : config.getStringList("config.change-result.materials." + key + ".result")) {
-                String[] split = s.split(";");
-                ItemStack result = new ItemStack(Material.valueOf(split[0]));
-
-                if (split.length > 1) {
-                    result.setAmount(Integer.parseInt(split[1]));
-                }
-                itemStacks.add(result);
-            }
-        }
-        return itemStacks.isEmpty() ? null : itemStacks;
-    }
 
     /**
      * Create new recipe of recycler block.
