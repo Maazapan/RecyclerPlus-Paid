@@ -34,7 +34,8 @@ public class ResultManager {
         return false;
     }
 
-    public void executeCommandResult(Player player, ItemStack itemStack) {
+
+    public boolean executeResult(Player player, ItemStack itemStack) {
         CustomItems customItems = plugin.getManager().getCustomItems();
         FileConfiguration config = plugin.getConfig();
 
@@ -46,6 +47,11 @@ public class ResultManager {
                 String resultID = customItems.isCustomItem(itemStack)
                         ? "custom_item:" + customItems.getCustomItemID(itemStack)
                         : "material:" + itemStack.getType();
+
+                if (config.isSet("config.change-result.materials." + key + ".permission")) {
+                    String permission = config.getString("config.change-result.materials." + key + ".permission");
+                    if (!player.hasPermission(permission)) continue;
+                }
 
                 if (!id.equalsIgnoreCase(resultID)) continue;
                 List<String> resultList = config.getStringList("config.change-result.materials." + key + ".result").stream()
@@ -71,8 +77,10 @@ public class ResultManager {
                         plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
                     }
                 }
+                return true;
             }
         }
+        return false;
     }
 
     public List<ItemStack> getItemResult(ItemStack itemStack) {

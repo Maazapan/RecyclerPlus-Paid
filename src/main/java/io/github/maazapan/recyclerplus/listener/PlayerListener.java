@@ -139,7 +139,7 @@ public class PlayerListener implements Listener {
 
 
     /**
-     * Cancel event if the player don't have permission.
+     * Cancel event if the player doesn't have permission.
      *
      * @param e Check item craft is a recycler block
      */

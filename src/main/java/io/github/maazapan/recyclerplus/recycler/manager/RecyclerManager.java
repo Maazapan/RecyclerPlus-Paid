@@ -148,8 +148,12 @@ public class RecyclerManager {
                 }
             }
 
+            if (!resultManager.executeResult(player, itemStack)) {
+                this.errorInfo(player, inventory);
+                return;
+            }
+
             ingredients.forEach(inventory::addItem);
-            resultManager.executeCommandResult(player, itemStack); // Execute command result.
 
             this.removeItemStack(inventory, itemStack, slot, amount);
             this.successInfo(player, inventory);
