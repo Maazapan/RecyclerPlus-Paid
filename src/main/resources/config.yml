@@ -63,7 +63,6 @@ config:
     materials:
       '1':
         id: custom_item:fired_sword
-        permission: "recyclerplus.change.1"
         result:
           - '[CONSOLE] say just recycled a diamond sword'
           - '[PLAYER] gamemode creative'
@@ -127,7 +126,7 @@ config:
   # use it to open the recycler more easily.
   item-recycler:
     id: PLAYER_HEAD
-    texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGIyYjYyNGRkYzdkNGE2NWU1MjcwYWU1Yjc3NWUxOGU4ZDU1ODk4ZjE1NzJiNDU5YmRmOTRkZDBkNDY0ODRmNyJ9fX0="
+    texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTgxMTkxN2M2NDRmMDRmNTZiNjhjOWM3MWIzM2FjMDgyYzI2MDFjMjQ0MDliZTc4YzIwNjNkNGRmMmE4NjUyNSJ9fX0="
     display_name: "&aRecycler"
     lore:
       - '&8RecyclerPlus'

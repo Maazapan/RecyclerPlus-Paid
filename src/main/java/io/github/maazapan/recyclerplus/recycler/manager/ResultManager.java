@@ -48,12 +48,14 @@ public class ResultManager {
                         ? "custom_item:" + customItems.getCustomItemID(itemStack)
                         : "material:" + itemStack.getType();
 
+                if (!id.equalsIgnoreCase(resultID)) continue;
                 if (config.isSet("config.change-result.materials." + key + ".permission")) {
                     String permission = config.getString("config.change-result.materials." + key + ".permission");
-                    if (!player.hasPermission(permission)) continue;
+
+                    System.out.println(player.hasPermission(permission));
+                    if (!player.hasPermission(permission)) return false;
                 }
 
-                if (!id.equalsIgnoreCase(resultID)) continue;
                 List<String> resultList = config.getStringList("config.change-result.materials." + key + ".result").stream()
                         .filter(s -> s.startsWith("[CONSOLE]") || s.startsWith("[PLAYER]")).collect(Collectors.toList());
 
@@ -103,7 +105,6 @@ public class ResultManager {
                         .filter(s -> s.startsWith("[ITEM]") || s.startsWith("[CUSTOM_ITEM]")).collect(Collectors.toList());
 
                 for (String result : resultList) {
-
                     // If the result is a material add to list.
                     if (result.startsWith("[ITEM]")) {
                         String[] resultSplit = result.replace("[ITEM]", "")

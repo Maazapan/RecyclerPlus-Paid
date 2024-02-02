@@ -6,12 +6,17 @@ import io.github.maazapan.recyclerplus.recycler.manager.CustomItems;
 import io.github.maazapan.recyclerplus.utils.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +40,20 @@ public class RecyclerCMD implements CommandExecutor, TabCompleter {
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
 
+                case "test": {
+
+                    Player player = (Player) sender;
+
+                    Vector vector = player.getLocation().getDirection().multiply(0.2);
+                    Location location = player.getLocation().add(0,1.4,0);
+
+                    ItemStack itemStack = new ItemStack(Material.DIAMOND);
+
+                    Item item = player.getWorld().dropItem(location, itemStack);
+                    item.setVelocity(vector);
+                }
+                break;
+
                 /*
                  Reload all plugin config.
                  - Command: /recycler reload
@@ -44,6 +63,9 @@ public class RecyclerCMD implements CommandExecutor, TabCompleter {
                     if (sender.hasPermission("recycler.cmd.reload")) {
                         plugin.reloadConfig();
                         plugin.saveDefaultConfig();
+
+                        plugin.getLoader().getCustomItems().load();
+
                         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&aSuccess reloaded config."));
 
                     } else {
@@ -178,7 +200,7 @@ public class RecyclerCMD implements CommandExecutor, TabCompleter {
 
             List<String> items = new ArrayList<>(customItems.getCustomItems().keySet());
 
-            if (args.length == 1) {
+            if (args.length == 1 || args.length == 2) {
                 if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("menu")) {
                     return players;
                 }

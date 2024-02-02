@@ -41,4 +41,8 @@ public final class Recycler extends JavaPlugin {
     public String getPrefix() {
         return getConfig().getString("config.prefix");
     }
+
+    public LoaderManager getLoader() {
+        return manager;
+    }
 }

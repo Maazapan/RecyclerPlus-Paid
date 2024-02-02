@@ -3,14 +3,15 @@ package io.github.maazapan.recyclerplus.listener;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.maazapan.recyclerplus.Recycler;
-import io.github.maazapan.recyclerplus.recycler.api.event.RecyclerOpenEvent;
 import io.github.maazapan.recyclerplus.hooks.worldguard.WorldGuardHook;
+import io.github.maazapan.recyclerplus.recycler.api.event.RecyclerOpenEvent;
 import io.github.maazapan.recyclerplus.recycler.gui.RecyclerGUI;
 import io.github.maazapan.recyclerplus.recycler.manager.RecyclerManager;
 import io.github.maazapan.recyclerplus.utils.InventoryUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,6 +25,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.util.Vector;
 
 import java.util.Arrays;
 import java.util.List;
@@ -101,14 +103,17 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         Block block = event.getBlock();
 
-        if (nbtBlock.getData().hasTag("recycler-block") && player.getGameMode() != GameMode.CREATIVE) {
+        if (nbtBlock.getData().hasTag("recycler-block")) {
             if (WorldGuardHook.hasWorldGuard() && !WorldGuardHook.canBreak(player, block.getLocation())) {
                 return;
             }
 
             event.setDropItems(false);
             nbtBlock.getData().removeKey("recycler-block");
-            block.getWorld().dropItem(block.getLocation().add(0.5, 0, 0.5), inventoryUtils.getRecyclerItem());
+
+            if (player.getGameMode() == GameMode.SURVIVAL) {
+                block.getWorld().dropItem(block.getLocation().add(0.5, 0, 0.5), inventoryUtils.getRecyclerItem());
+            }
         }
     }
 
@@ -131,6 +136,15 @@ public class PlayerListener implements Listener {
                 NBTItem nbtItem = new NBTItem(itemStack);
 
                 if (!nbtItem.hasCustomNbtData()) {
+
+                    if (player.getInventory().firstEmpty() == -1) {
+                        Vector vector = player.getLocation().getDirection().multiply(0.2);
+                        Location location = player.getLocation().add(0, 1.4, 0);
+
+                        Item item = player.getWorld().dropItem(location, itemStack);
+                        item.setVelocity(vector);
+                        continue;
+                    }
                     player.getInventory().addItem(itemStack);
                 }
             }

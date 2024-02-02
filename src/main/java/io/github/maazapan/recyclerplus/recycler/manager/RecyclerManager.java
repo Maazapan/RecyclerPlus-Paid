@@ -56,14 +56,14 @@ public class RecyclerManager {
             }
 
             if (!event.isCustomRecipe()) {
-                if (RecyclerAPI.getShapedRecipe(itemStack) == null && RecyclerAPI.getIngredients(itemStack) == null) {
+                if (RecyclerAPI.getRecipe(itemStack) == null || RecyclerAPI.getIngredients(itemStack) == null) {
                     this.errorInfo(player, inventory);
                     return;
                 }
             }
 
             /*
-             - Check material is not blacklisted.
+             - Check material is not blocklisted.
              */
             for (String type : config.getStringList("config.blacklist-items")) {
                 if (itemStack.getType().toString().equals(type)) {
@@ -74,7 +74,7 @@ public class RecyclerManager {
             /*
              - Check item-stack is correct amount at recipe amount
              */
-            int amount = event.isCustomRecipe() ? 1 : RecyclerAPI.getShapedRecipe(itemStack).getResult().getAmount();
+            int amount = event.isCustomRecipe() ? 1 : RecyclerAPI.getRecipe(itemStack).getResult().getAmount();
 
             if (itemStack.getAmount() < amount) {
                 this.errorInfo(player, inventory);
@@ -148,11 +148,7 @@ public class RecyclerManager {
                 }
             }
 
-            if (!resultManager.executeResult(player, itemStack)) {
-                this.errorInfo(player, inventory);
-                return;
-            }
-
+            resultManager.executeResult(player, itemStack);
             ingredients.forEach(inventory::addItem);
 
             this.removeItemStack(inventory, itemStack, slot, amount);
@@ -183,7 +179,9 @@ public class RecyclerManager {
      */
     private void removeItemStack(Inventory inventory, ItemStack itemStack, int slot, int amount) {
         if (itemStack.getAmount() > amount) {
-            inventory.setItem(slot, new ItemStack(itemStack.getType(), itemStack.getAmount() - amount));
+
+            itemStack.setAmount(itemStack.getAmount() - amount);
+            inventory.setItem(slot, itemStack);
 
         } else {
             inventory.setItem(slot, new ItemStack(Material.AIR));

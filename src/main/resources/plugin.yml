@@ -1,7 +1,7 @@
 name: RecyclerPlus
 version: '${project.version}'
 main: io.github.maazapan.recyclerplus.Recycler
-api-version: +1.16
+api-version: 1.16
 softdepend:
   - WorldGuard
 

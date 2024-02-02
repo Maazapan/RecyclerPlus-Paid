@@ -1,11 +1,6 @@
 package io.github.maazapan.recyclerplus.utils;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -14,8 +9,10 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.inventory.meta.tags.ItemTagType;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.profile.PlayerProfile;
 
-import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -147,22 +144,18 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setSkullBase64(String base64) {
-
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
-        SkullMeta meta = (SkullMeta) head.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), "");
-
-        profile.getProperties().put("textures", new Property("textures", base64));
-        Field profileField = null;
+        is = new ItemStack(Material.PLAYER_HEAD);
+        PlayerProfile profile = Bukkit.getServer().createPlayerProfile(UUID.randomUUID(), "Recycler Head");
 
         try {
-            profileField = meta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(meta, profile);
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+            profile.getTextures().setSkin(new URL(KatsuUtils.getURLFromBase64(base64)));
+            SkullMeta meta = (SkullMeta) is.getItemMeta();
+            meta.setOwnerProfile(profile);
+            is.setItemMeta(meta);
+
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        is.setItemMeta(meta);
         return this;
     }
 

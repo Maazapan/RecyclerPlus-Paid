@@ -54,8 +54,8 @@ public class RecyclerGUI implements InventoryHolder {
                     itemBuilder.setLore(config.getStringList("config.inventory.items." + path + ".lore"));
                 }
 
-                if (config.isSet("config.inventory.items." + path + ".model-data")) {
-                    itemBuilder.setModelData(config.getInt("config.inventory.items." + path + ".model-data"));
+                if (config.isSet("config.inventory.items." + path + ".model_data")) {
+                    itemBuilder.setModelData(config.getInt("config.inventory.items." + path + ".model_data"));
                 }
 
                 NBTItem nbtItem = new NBTItem(itemBuilder.toItemStack());
